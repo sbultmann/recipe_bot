@@ -4,7 +4,9 @@ from app import db
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64), index=True)
-    image_id = db.Column(db.String(64), index=True)
+    image_id = db.Column(db.String(64))
+    vegetarian = db.Column(db.Boolean())
+    dish_type = db.Column(db.String(64))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     ingredients = db.relationship('Ingredients', backref='recipe', lazy='dynamic')
     instructions = db.relationship('Instructions', backref='recipe', lazy='dynamic')
@@ -27,4 +29,4 @@ class Instructions(db.Model):
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
 
     def __repr__(self):
-        return f'<Ingredient: {self.name}>'
+        return f'<Instructions: {self.recipe_id}>'

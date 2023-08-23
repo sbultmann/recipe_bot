@@ -2,6 +2,8 @@
 import openai
 import json
 from app import app
+import urllib.request
+import os
 
 openai.api_key = app.config["OPENAI_API"]
 
@@ -44,7 +46,10 @@ schema = {
 
 # define the function
 def get_recipe(dish_type,ingredients,recipe_type):
-
+    if recipe_type:
+        recipe_type = "vegetarian"
+    else:
+        recipe_type = ''
     conversation=[{"role": "system", "content": "You are a helpful assistant."},
                   {"role": "user", "content": f"Provide a {recipe_type} {dish_type} recipe containing {ingredients}."}
                   ]
@@ -52,10 +57,9 @@ def get_recipe(dish_type,ingredients,recipe_type):
                                             messages=conversation, 
                                             functions=[{"name": "set_recipe", "parameters": schema}],
                                             function_call={"name": "set_recipe"},
-                                            temperature=0
+                                            temperature=0.3
                                             )
     answer = json.loads(response.choices[0].message.function_call.arguments)
-    print(answer)
     
     return answer
 
@@ -69,15 +73,17 @@ def get_image(title):
         n=1,
         size="256x256",
     )
-    """
+    
     if "data" in response:
         for key, obj in enumerate(response["data"]):
-            filename =f'images/my_image_{str(key)}.jpg'
+            id = obj['url'].split("img-")[1].split(".png")[0]
+            filename = os.path.join(app.root_path, 'static', 'img', f'{id}_recipe_image.png')
+            print(filename)
             urllib.request.urlretrieve(obj['url'], filename)
         print('Images have been downloaded and saved locally')
     else:
-        print("Failed to generate image")"""
-    return response["data"][0]["url"]
+        print("Failed to generate image")
+    return f'{str(id)}_recipe_image.png'
 
 
 """

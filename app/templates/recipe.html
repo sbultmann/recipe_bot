@@ -6,13 +6,13 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            <img src="{{ image }}" alt=""></img>
+            <img src="{{url_for('static',filename='img/' + image)}}" alt=""></img>
         </div>
         <div class="col-md-6">
             <h2>Ingredients</h2>
             <ul>
                 {% for ingredient in recipe.ingredients %}
-                <li>{{ ingredient.name }} - {{ ingredient.amount }}{{ ingredient.unit }}</li>
+                <li>{{ ingredient.name }} - {{ ingredient.amount }} {{ ingredient.unit }}</li>
                 {% endfor %}
             </ul>
         </div>
