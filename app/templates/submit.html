@@ -2,8 +2,47 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
-        <div>
+<div class="content rounded bg-light text-dark p-4 border border-3 border-secondary w-75 ">
+    <div class="row m-3">
         <h1>New Recipe</h1>
-        {{ wtf.quick_form(form) }}
     </div>
+    <div class="d-flex align-items-center justify-content-center m-4">
+        <div class="row rounded bg-white text-dark border border-3 border-secondary w-100">
+            <div class = "col p-4">
+                <form action="" method="post" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="form-group m-3">
+                        <h5>{{ form.dish_type.label }}</h5>
+                        {{ form.dish_type(class="form-control") }}
+                    </div>
+                    <div class="form-group m-3">
+                        <h5>{{ form.ingredients.label }}:</h5>
+                        {{ form.ingredients(class="form-control") }}
+                    </div>
+                    <div class="form-check m-3">
+                        {{ form.recipe_type(class="form-check-input") }}
+                        {{ form.recipe_type.label }}
+                    </div>
+                    <div class="m-3">
+                    {{ form.submit(class="btn btn-outline-secondary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="m-4">
+    <div class="row">
+        <div class="col">
+            
+        </div>
+        
+        <div class="col">
+            
+        </div>
+    </div>
+    </div> 
+</div>
 {% endblock %}
+
+
+   

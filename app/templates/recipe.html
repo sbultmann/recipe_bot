@@ -1,30 +1,45 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <div class="row">
+<div class="content rounded bg-light text-dark p-4 border border-3 border-secondary w-75 ">
+    <div class="row m-3">
         <h1>{{ recipe.title }}</h1>
     </div>
-    <div class="row">
-        <div class="col-md-6">
-            <img src="{{url_for('static',filename='img/' + image)}}" alt=""></img>
+    <div class="d-flex align-items-center justify-content-center m-4">
+        <div class="row rounded bg-white text-dark border border-3 border-secondary w-100">
+            <div class = "col ">
+                <img src="{{url_for('static',filename='img/' + image)}}" class="rounded mx-auto d-block p-4" alt="centered image"></img>
+            </div>
         </div>
-        <div class="col-md-6">
-            <h2>Ingredients</h2>
+    </div>
+    <div class="m-4">
+    <div class="row">
+        <div class="col-5">
+            <h3>Ingredients</h3>
+            <table class="table">
+                <tbody>
+                    {% for ingredient in recipe.ingredients %}
+                    <tr class="table-light">
+                      <td>{{ ingredient.amount }} {{ ingredient.unit }}</td>
+                      <td>{{ ingredient.name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                
+            </table>
+                
+            
+        </div>
+        
+        <div class="col-7">
+            <h3>Instructions</h3>
             <ul>
-                {% for ingredient in recipe.ingredients %}
-                <li>{{ ingredient.name }} - {{ ingredient.amount }} {{ ingredient.unit }}</li>
+                {% for instruction in recipe.instructions %}
+                <li>{{ instruction }}</li>
                 {% endfor %}
             </ul>
         </div>
-        
     </div>
-    <div class="row">
-        <h2>Instructions</h2>
-        <ol>
-            {% for instruction in recipe.instructions %}
-            <li>{{ instruction }}</li>
-            {% endfor %}
-        </ol>
-    </div>
-
+    </div> 
+</div>
 {% endblock %}

@@ -13,7 +13,8 @@ def index():
         print("asking ChatGPT for help ...")
         recipe_data = get_recipe(form.dish_type.data, form.ingredients.data,form.recipe_type.data)
         print("asking DALL_E for help ...")
-        image = get_image(recipe_data['title'])
+        print(recipe_data['prompt'])
+        image = get_image(recipe_data['prompt'])
         print('storing info in database ...')
 
         #create a new recipe
@@ -48,7 +49,11 @@ def recipe(id):
     recipe = Recipe.query.filter_by(id=id).first_or_404()
     ingredients = []
     for ingredient in recipe.ingredients:
-         ingredients.append({'name':ingredient.name, 'unit':ingredient.unit, 'amount': ingredient.amount})
+        if ingredient.amount.is_integer():
+            amount = int(ingredient.amount)
+        else:
+            amount = ingredient.amount
+        ingredients.append({'name':ingredient.name, 'unit':ingredient.unit, 'amount': amount})
     instructions = []
     for instruction in recipe.instructions:
          instructions.append(instruction.instruction)
@@ -57,5 +62,4 @@ def recipe(id):
          'ingredients':ingredients,
          'instructions':instructions
     }
-    print(recipe_data)
     return render_template('recipe.html', title='Recipe Bot', recipe=recipe_data, image = recipe.image_id)

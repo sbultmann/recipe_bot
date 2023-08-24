@@ -11,10 +11,15 @@ openai.api_key = app.config["OPENAI_API"]
 schema = {
     "type": "object",
     "properties": {
+    
     "title": {
         "type": "string",
         "description": "creative recipe title"
         },
+    "prompt": {
+        "type": "string",
+        "description": "a prompt for DALL-E to generate a high qualtiy picture of the recipe in the style of modern food photography, 15mm, warm light"
+    },
     "ingredients": {
         "type": "array",
         "items": {
@@ -23,7 +28,7 @@ schema = {
             "name": { "type": "string" },
             "unit": { 
             "type": "string",
-            "enum": ["grams", "ml", "pieces", "teaspoons", "tablespoons"]
+            "enum": ["grams", "ml","l","pinch","pieces", "teaspoons", "tablespoons"]
             },
             "amount": { "type": "number" }
         },
@@ -40,7 +45,7 @@ schema = {
         "description": "Total time to prepare the recipe in minutes"
     }
     },
-    "required": ["ingredients", "instructions", "time_to_cook"]
+    "required": ["title","ingredients", "instructions", "time_to_cook", "prompt"]
     }
 
 
@@ -57,7 +62,7 @@ def get_recipe(dish_type,ingredients,recipe_type):
                                             messages=conversation, 
                                             functions=[{"name": "set_recipe", "parameters": schema}],
                                             function_call={"name": "set_recipe"},
-                                            temperature=0.3
+                                            temperature=0.4
                                             )
     answer = json.loads(response.choices[0].message.function_call.arguments)
     
@@ -66,7 +71,7 @@ def get_recipe(dish_type,ingredients,recipe_type):
 
 #create an image using DALL-E
 def get_image(title):
-    PROMPT = f"{title} gourmet cook book photo"
+    PROMPT = f"{title} food photography, 15mm, warm light"
 
     response = openai.Image.create(
         prompt=PROMPT,
@@ -84,7 +89,3 @@ def get_image(title):
     else:
         print("Failed to generate image")
     return f'{str(id)}_recipe_image.png'
-
-
-"""
-{'title': 'Honey Glazed Pork and Carrots', 'ingredients': [{'name': 'pork loin', 'unit': 'grams', 'amount': 500}, {'name': 'carrots', 'unit': 'pieces', 'amount': 4}, {'name': 'honey', 'unit': 'tablespoons', 'amount': 3}, {'name': 'olive oil', 'unit': 'tablespoons', 'amount': 2}, {'name': 'salt', 'unit': 'teaspoons', 'amount': 1}, {'name': 'pepper', 'unit': 'teaspoons', 'amount': 1}], 'instructions': ['Preheat your oven to 375 degrees F (190 degrees C).', 'Peel the carrots and cut them into 2-inch pieces.', 'In a large oven-safe pan, heat the olive oil over medium-high heat. Add the pork loin to the pan and sear on all sides until browned.', 'Remove the pork from the pan and set it aside. Add the carrots to the pan and cook for 5 minutes, stirring occasionally.', 'Return the pork to the pan and drizzle the honey over the pork and carrots. Season with salt and pepper.', 'Place the pan in the preheated oven and roast for 25-30 minutes, or until the pork is cooked through and the carrots are tender.', 'Remove from the oven and let the pork rest for a few minutes before slicing. Serve the pork and carrots with the pan juices drizzled over the top.'], 'time_to_cook': 60}"""
