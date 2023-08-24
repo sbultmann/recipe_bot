@@ -1,6 +1,15 @@
 # Recipe Bot
 This is an implementation of a recipe generator based on GPT-4 and DALL-E in flask.
 
+## installation
+For the flask app to run properly you need to create a `.flaskenv` file in the main directory with the folowing content:
+```
+FLASK_APP=recipe_bot.py
+FLASK_DEBUG=1
+OPENAI_API="your Open.ai API key" #required for gpt-4 and DALL-E
+SECRET_KEY="your secret key here" #required for cross site attack protection
+```
+
 ## app/functions.py
 
 ```Python
