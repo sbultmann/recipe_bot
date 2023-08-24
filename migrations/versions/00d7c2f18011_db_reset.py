@@ -1,8 +1,8 @@
-"""first migration
+"""db reset
 
-Revision ID: 9965d51c9bc4
+Revision ID: 00d7c2f18011
 Revises: 
-Create Date: 2023-08-23 11:07:55.890739
+Create Date: 2023-08-24 11:05:18.435187
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '9965d51c9bc4'
+revision = '00d7c2f18011'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,11 +22,12 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=64), nullable=True),
     sa.Column('image_id', sa.String(length=64), nullable=True),
+    sa.Column('vegetarian', sa.Boolean(), nullable=True),
+    sa.Column('dish_type', sa.String(length=64), nullable=True),
     sa.Column('timestamp', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('recipe', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_recipe_image_id'), ['image_id'], unique=False)
         batch_op.create_index(batch_op.f('ix_recipe_timestamp'), ['timestamp'], unique=False)
         batch_op.create_index(batch_op.f('ix_recipe_title'), ['title'], unique=False)
 
@@ -56,7 +57,6 @@ def downgrade():
     with op.batch_alter_table('recipe', schema=None) as batch_op:
         batch_op.drop_index(batch_op.f('ix_recipe_title'))
         batch_op.drop_index(batch_op.f('ix_recipe_timestamp'))
-        batch_op.drop_index(batch_op.f('ix_recipe_image_id'))
 
     op.drop_table('recipe')
     # ### end Alembic commands ###

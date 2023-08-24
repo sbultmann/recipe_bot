@@ -42,7 +42,8 @@ def index():
         db.session.commit()
         
         return redirect(f'/recipe/{recipe.id}')
-    return render_template('submit.html', title='Recipe Bot', form=form)
+    recipes = Recipe.query.all()
+    return render_template('submit.html', title='Recipe Bot', form=form, recipes = recipes)
 
 @app.route('/recipe/<id>')
 def recipe(id):
