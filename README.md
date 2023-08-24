@@ -21,7 +21,7 @@ def get_recipe(dish_type,ingredients,recipe_type):
 def get_image(title):
     ...
     return f'{str(id)}_recipe_image.png'
-´´´
+```
 
 This Python code does the following:
 
