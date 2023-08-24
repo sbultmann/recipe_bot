@@ -2,12 +2,32 @@
 This is an implementation of a recipe generator based on GPT-4 and DALL-E in flask.
 
 ## installation
+First install all requirements:
+```Bash
+pip install -r requirements.txt
+```
+
 For the flask app to run properly you need to create a `.flaskenv` file in the main directory with the folowing content:
 ```
 FLASK_APP=recipe_bot.py
 FLASK_DEBUG=1
 OPENAI_API="your Open.ai API key" #required for gpt-4 and DALL-E
 SECRET_KEY="your secret key here" #required for cross site attack protection
+```
+Finally, run the app with:
+```Bash
+flask run
+```
+You should get a similar output to this:
+```Bash
+ * Serving Flask app 'recipe_bot.py'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: xxx-xxx-xxx
 ```
 
 ## app/functions.py
