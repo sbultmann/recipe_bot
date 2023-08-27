@@ -62,7 +62,7 @@ def get_recipe(dish_type,ingredients,recipe_type):
                                             messages=conversation, 
                                             functions=[{"name": "set_recipe", "parameters": schema}],
                                             function_call={"name": "set_recipe"},
-                                            temperature=0.4
+                                            temperature=0.5
                                             )
     answer = json.loads(response.choices[0].message.function_call.arguments)
     
