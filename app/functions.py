@@ -56,7 +56,7 @@ def get_recipe(dish_type,ingredients,recipe_type):
     else:
         recipe_type = ''
     conversation=[{"role": "system", "content": "You are a helpful assistant."},
-                  {"role": "user", "content": f"Provide a {recipe_type} {dish_type} recipe containing {ingredients}."}
+                  {"role": "user", "content": f"Provide a healthy {recipe_type} {dish_type} recipe containing {ingredients}. Add other ingredients if you think this would make the dish better."}
                   ]
     response = openai.ChatCompletion.create(model="gpt-4", 
                                             messages=conversation, 
