@@ -12,16 +12,8 @@
                 <form action="" method="post" novalidate>
                     {{ form.hidden_tag() }}
                     <div class="form-group m-3">
-                        <h5>{{ form.dish_type.label }}</h5>
-                        {{ form.dish_type(class="form-control") }}
-                    </div>
-                    <div class="form-group m-3">
-                        <h5>{{ form.ingredients.label }}:</h5>
-                        {{ form.ingredients(class="form-control") }}
-                    </div>
-                    <div class="form-check m-3">
-                        {{ form.recipe_type(class="form-check-input") }}
-                        {{ form.recipe_type.label }}
+                        <h5>{{ form.url.label }}</h5>
+                        {{ form.url(class="form-control") }}
                     </div>
                     <div class="m-3">
                     {{ form.submit(class="btn btn-outline-secondary") }}

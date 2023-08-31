@@ -7,3 +7,7 @@ class RecipeForm(FlaskForm):
     ingredients = StringField('Ingredients', validators=[DataRequired()])
     recipe_type = BooleanField('Make it veggie!')
     submit = SubmitField('Generate Recipe!')
+
+class ImportForm(FlaskForm):
+    url = StringField('URL', validators=[DataRequired()])
+    submit = SubmitField('Import Recipe!')

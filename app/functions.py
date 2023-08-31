@@ -4,6 +4,9 @@ import json
 from app import app
 import urllib.request
 import os
+import requests
+from bs4 import BeautifulSoup
+
 
 openai.api_key = app.config["OPENAI_API"]
 
@@ -77,7 +80,7 @@ def get_image(title):
         prompt=PROMPT,
         n=1,
         size="256x256",
-    )
+    )   
     
     if "data" in response:
         for key, obj in enumerate(response["data"]):
@@ -89,3 +92,40 @@ def get_image(title):
     else:
         print("Failed to generate image")
     return f'{str(id)}_recipe_image.png'
+
+
+#function that uses requets lib to extract html of a web page and prettyfies it with bs4
+def extract_html(url):
+    # Send a GET request to the URL
+
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+    response = requests.get(url, headers=headers)
+    
+    # Check if the GET request is successful
+    if response.status_code == 200:
+        # Create a BeautifulSoup object and specify the parser
+        soup = BeautifulSoup(response.text, 'html.parser')
+        for data in soup(['style', 'script', 'a']):
+        # Remove tags
+            data.decompose()
+        soup = ' '.join(soup.stripped_strings)
+        body = soup.find('body')
+        # Return the pretty-printed HTML
+        return soup
+    else:
+        return "Failed to retrieve HTML."
+    
+# define the function
+def extract_recipe(html):
+    conversation=[{"role": "system", "content": "You are a helpful assistant."},
+                  {"role": "user", "content": f"extract the recipe form the follwoing html code:\n{html}"}
+                  ]
+    response = openai.ChatCompletion.create(model="gpt-4", 
+                                            messages=conversation, 
+                                            functions=[{"name": "set_recipe", "parameters": schema}],
+                                            function_call={"name": "set_recipe"},
+                                            temperature=0.5
+                                            )
+    answer = json.loads(response.choices[0].message.function_call.arguments)
+    
+    return answer

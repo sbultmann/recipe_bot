@@ -163,3 +163,4 @@ cython_debug/
 .flaskenv
 
 *.code-workspace
+*.ipynb
