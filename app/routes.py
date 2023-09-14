@@ -1,13 +1,18 @@
 from flask import render_template, flash, redirect, url_for
 from app import app, db
 from app.functions import get_recipe, get_image, extract_recipe, extract_html
-from app.forms import RecipeForm, ImportForm
+from app.forms import RecipeForm, ImportForm, ImportTextForm
 from app.models import Recipe, Instructions, Ingredients
-
 
 
 @app.route('/',methods=['GET', 'POST'])
 def index():
+    recipes = Recipe.query.all()
+    return render_template('collection.html', title='Recipe Bot', recipes = recipes)
+
+
+@app.route('/generate',methods=['GET', 'POST'])
+def generate():
     form = RecipeForm()
     if form.validate_on_submit():
         print("asking ChatGPT for help ...")
@@ -42,8 +47,7 @@ def index():
         db.session.commit()
         
         return redirect(f'/recipe/{recipe.id}')
-    recipes = Recipe.query.all()
-    return render_template('submit.html', title='Recipe Bot', form=form, recipes = recipes)
+    return render_template('submit.html', title='Recipe Bot', form=form)
 
 @app.route('/recipe/<id>')
 def recipe(id):
@@ -68,6 +72,44 @@ def recipe(id):
 @app.route('/import_recipe',methods=['GET', 'POST'])
 def import_recipe():
     form = ImportForm()
+    if form.validate_on_submit():
+        text = form.text.data
+        recipe_data = extract_recipe(text)
+        print("asking DALL_E for help ...")
+        print(recipe_data['prompt'])
+        image = get_image(recipe_data['prompt'])
+        print('storing info in database ...')
+
+        #create a new recipe
+        recipe = Recipe(title=recipe_data['title'],
+                        image_id=image,
+                        dish_type = "imported"
+                        )
+        db.session.add(recipe)
+
+        #create new ingredients
+        for ingredient in recipe_data['ingredients']:
+            new_ingredient = Ingredients(name=ingredient['name'], 
+                                        unit=ingredient['unit'],
+                                        amount=ingredient['amount'],
+                                        recipe=recipe)
+            db.session.add(new_ingredient)
+        
+        #create new instructions
+        for instruction in recipe_data['instructions']:
+            new_instruction = Instructions(instruction=instruction,
+                                           recipe=recipe)
+            db.session.add(new_instruction)
+
+        db.session.commit()
+        
+        return redirect(f'/recipe/{recipe.id}')
+    recipes = Recipe.query.all()
+    return render_template('import.html', title='Recipe Bot', form=form, recipes = recipes)
+
+@app.route('/import_from_text',methods=['GET', 'POST'])
+def import_from_text():
+    form = ImportTextForm()
     if form.validate_on_submit():
         html = extract_html(form.url.data)
         recipe_data = extract_recipe(html)
@@ -101,7 +143,7 @@ def import_recipe():
         
         return redirect(f'/recipe/{recipe.id}')
     recipes = Recipe.query.all()
-    return render_template('import.html', title='Recipe Bot', form=form, recipes = recipes)
+    return render_template('import_from_text.html', title='Recipe Bot', form=form, recipes = recipes)
 
 @app.route('/kindle',methods=['GET', 'POST'])
 def kindle_index():

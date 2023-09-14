@@ -43,12 +43,13 @@ schema = {
         "description": "Steps to prepare the recipe (no numbering)",
         "items": { "type": "string" }
     },
-    "time_to_cook": {
-        "type": "number",
-        "description": "Total time to prepare the recipe in minutes"
+    "recipe_type": {
+        "type": "string",
+        "description": "wether the recipe is vegetarian, vegan, or with meat",
+        "enum": ["vegetarian", "vegan", "meat"]
     }
     },
-    "required": ["title","ingredients", "instructions", "time_to_cook", "prompt"]
+    "required": ["title","ingredients", "instructions", "recipe_type", "prompt"]
     }
 
 
@@ -59,7 +60,8 @@ def get_recipe(dish_type,ingredients,recipe_type):
     else:
         recipe_type = ''
     conversation=[{"role": "system", "content": "You are a helpful assistant."},
-                  {"role": "user", "content": f"Provide a healthy {recipe_type} {dish_type} recipe containing {ingredients}. Add other ingredients if you think this would make the dish better."}
+                  {"role": "user", "content": f"""Provide a healthy {recipe_type} {dish_type} recipe containing {ingredients}. 
+                   Add other ingredients if you think this would make the dish better."""}
                   ]
     response = openai.ChatCompletion.create(model="gpt-4", 
                                             messages=conversation, 
