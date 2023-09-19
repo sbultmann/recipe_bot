@@ -73,8 +73,8 @@ def recipe(id):
 def import_recipe():
     form = ImportForm()
     if form.validate_on_submit():
-        text = form.text.data
-        recipe_data = extract_recipe(text)
+        html = extract_html(form.url.data)
+        recipe_data = extract_recipe(html)
         print("asking DALL_E for help ...")
         print(recipe_data['prompt'])
         image = get_image(recipe_data['prompt'])
@@ -111,8 +111,7 @@ def import_recipe():
 def import_from_text():
     form = ImportTextForm()
     if form.validate_on_submit():
-        html = extract_html(form.url.data)
-        recipe_data = extract_recipe(html)
+        recipe_data = extract_recipe(form.text.data)
         print("asking DALL_E for help ...")
         print(recipe_data['prompt'])
         image = get_image(recipe_data['prompt'])

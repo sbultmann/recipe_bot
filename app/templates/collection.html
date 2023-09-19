@@ -7,40 +7,64 @@
         <div class="row m-2">
             <h2 class="display-6">Recipes</h2>
             <hr>
-            <div class="col">
-                <h5>[Main]</h5>
-                {% for recipe in recipes %}
-                    {% if recipe.dish_type == 'main dish' %}
-                        <a href="{{ url_for('recipe', id=recipe.id) }}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">{{recipe.title}}</a>, 
-                    {% endif %}
-                {% endfor %}
+            <div class="col-lg-3 pt-2">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-header">
+                        Hauptgerichte
+                    </div>
+                    <div class="list-group">
+                        {% for recipe in recipes %}
+                            {% if recipe.dish_type == 'main dish' %}
+                                <a href="{{ url_for('recipe', id=recipe.id) }}" class="list-group-item list-group-item-action">{{recipe.title}}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 
-            <div class="col">
-                <h5>[Sides]</h5>
-                {% for recipe in recipes %}
-                    {% if recipe.dish_type == 'side dish' %}
-                        <a href="{{ url_for('recipe', id=recipe.id) }}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">{{recipe.title}}</a>, 
-                    {% endif %}
-                {% endfor %}
+            <div class="col-lg-3 pt-2">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-header">
+                        Beilagen
+                    </div>
+                    <div class="list-group">
+                        {% for recipe in recipes %}
+                            {% if recipe.dish_type == 'side dish' %}
+                                <a href="{{ url_for('recipe', id=recipe.id) }}" class="list-group-item list-group-item-action">{{recipe.title}}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
     
-            <div class="col">
-                <h5>[Deserts]</h5>
-                {% for recipe in recipes %}
-                    {% if recipe.dish_type == 'desert' %}
-                        <a href="{{ url_for('recipe', id=recipe.id) }}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">{{recipe.title}}</a>, 
-                    {% endif %}
-                {% endfor %}
+            <div class="col-lg-3 pt-2">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-header">
+                        Nachtische
+                    </div>
+                    <div class="list-group">
+                        {% for recipe in recipes %}
+                            {% if recipe.dish_type == 'desert' %}
+                                <a href="{{ url_for('recipe', id=recipe.id) }}" class="list-group-item list-group-item-action">{{recipe.title}}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 
-            <div class="col">
-                <h5>[Imported]</h5>
-                {% for recipe in recipes %}
-                    {% if recipe.dish_type == 'imported' %}
-                        <a href="{{ url_for('recipe', id=recipe.id) }}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">{{recipe.title}}</a>, 
-                    {% endif %}
-                {% endfor %}
+            <div class="col-lg-3 pt-2">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-header">
+                        Importiert (Web)
+                    </div>
+                    <div class="list-group">
+                        {% for recipe in recipes %}
+                            {% if recipe.dish_type == 'imported' %}
+                                <a href="{{ url_for('recipe', id=recipe.id) }}" class="list-group-item list-group-item-action">{{recipe.title}}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
