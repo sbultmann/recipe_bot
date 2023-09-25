@@ -4,18 +4,13 @@
 {% block app_content %}
 <div class="row">
     <div class = "col-lg border bg-white border-light rounded p-3">
-        <h1 class="display-6">Import from Text</h1>
+        <h1 class="display-6">Import from Image</h1>
         <hr>
-        <form action="" method="post" novalidate>
+        <form action="{{url_for('import_from_text')}}" method="post" novalidate enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <div class="row">
                 <div class="col-auto">
-                    {{ form.text.label(class="col-form-label") }}:
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-auto">
-                    {{ form.text(class="form-control", style='height: 100px;width: 450px;') }}
+                    {{ form.file(class="form-control") }}
                 </div>
             </div>
             <div class="row pt-2">
@@ -29,7 +24,7 @@
         <img src="{{url_for('static',filename='img/Spinner.gif')}}" class="rounded" alt="centered image" width="64">Rezept wird erzeugt ...
     </div>
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
     <script src="https://malsup.github.io/jquery.form.js"></script> 
     <script type="text/javascript">
         $(document).ready(function(){
@@ -51,7 +46,7 @@
                 return false;
             });
         });
-    </script> 
+    </script>  -->
 {% endblock %}
 
 

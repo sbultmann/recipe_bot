@@ -14,7 +14,7 @@
                     </div>
                     <div class="list-group">
                         {% for recipe in recipes %}
-                            {% if recipe.dish_type == 'main dish' %}
+                            {% if recipe.dish_type == 'Hauptgericht' %}
                                 <a href="{{ url_for('recipe', id=recipe.id) }}" class="list-group-item list-group-item-action">{{recipe.title}}</a>
                             {% endif %}
                         {% endfor %}
@@ -29,7 +29,7 @@
                     </div>
                     <div class="list-group">
                         {% for recipe in recipes %}
-                            {% if recipe.dish_type == 'side dish' %}
+                            {% if recipe.dish_type == 'Beilage' %}
                                 <a href="{{ url_for('recipe', id=recipe.id) }}" class="list-group-item list-group-item-action">{{recipe.title}}</a>
                             {% endif %}
                         {% endfor %}
@@ -44,7 +44,7 @@
                     </div>
                     <div class="list-group">
                         {% for recipe in recipes %}
-                            {% if recipe.dish_type == 'desert' %}
+                            {% if recipe.dish_type == 'Nachspeise' %}
                                 <a href="{{ url_for('recipe', id=recipe.id) }}" class="list-group-item list-group-item-action">{{recipe.title}}</a>
                             {% endif %}
                         {% endfor %}

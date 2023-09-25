@@ -3,10 +3,10 @@
 
 {% block app_content %}
     <div class="row">
-        <div class = "col-lg border bg-white border-light rounded p-3">
-            <h1 class="display-6">New Recipe</h1>
+        <div class = "col-lg border bg-white border-light rounded p-3" id = "contentbox">
+            <h1 class="display-6">Neues Rezept</h1>
             <hr>
-            <form action="" method="post" novalidate>
+            <form action="" method="post" novalidate id = "formgenerate">
                 {{ form.hidden_tag() }}
                 <div class="row m-1">
                     <div class="col-4">
@@ -43,8 +43,35 @@
                 </div>
             </form>
         </div>
+        <div class="alert alert-info" role="alert" id="running" style="display: none;">
+            <img src="{{url_for('static',filename='img/Spinner.gif')}}" class="rounded" alt="centered image" width="64">Rezept wird erzeugt ...
+        </div>
+        
     </div>
-
+  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+    <script src="https://malsup.github.io/jquery.form.js"></script> 
+    <script type="text/javascript">
+        $(document).ready(function(){
+            
+            $("form").submit(function(e){
+                var form = $(this);
+                $('#running').show();
+                $.ajax({ 
+                    url   : "{{ url_for('generate_recipe') }}",
+                    method : 'POST',
+                    type  : form.attr('method'),
+                    data  : form.serialize(), // data to be submitted
+                    success: function(response){
+                        window.location = response;
+                        //alert(response); // do what you like with the response
+                    }
+                    
+                });
+                return false;
+            });
+        });
+    </script> 
 {% endblock %}
 
 

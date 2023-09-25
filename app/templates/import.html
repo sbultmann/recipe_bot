@@ -22,7 +22,33 @@
             </div>
         </form>
     </div>
+    <div class="alert alert-info" role="alert" id="running" style="display: none;">
+        <img src="{{url_for('static',filename='img/Spinner.gif')}}" class="rounded" alt="centered image" width="64">Rezept wird erzeugt ...
+    </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+    <script src="https://malsup.github.io/jquery.form.js"></script> 
+    <script type="text/javascript">
+        $(document).ready(function(){
+            
+            $("form").submit(function(e){
+                var form = $(this);
+                $('#running').show();
+                $.ajax({ 
+                    url   : "{{ url_for('generate_from_web') }}",
+                    method : 'POST',
+                    type  : form.attr('method'),
+                    data  : form.serialize(), // data to be submitted
+                    success: function(response){
+                        window.location = response;
+                        //alert(response); // do what you like with the response
+                    }
+                    
+                });
+                return false;
+            });
+        });
+    </script> 
 
 {% endblock %}
 

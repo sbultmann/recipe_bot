@@ -1,77 +1,50 @@
 
 import openai
 import json
-from app import app
+from app import app, db
 import urllib.request
 import os
 import requests
-from bs4 import BeautifulSoup
+import re
+from langchain.document_loaders import WebBaseLoader
+from app.models import Recipe, Ingredients, Naehrwerte, Instructions
+from werkzeug.utils import secure_filename
 
+from app.ai_config import *
 
-openai.api_key = app.config["OPENAI_API"]
+#importing modules
+import pytesseract
 
-#JSON output schema
-schema = {
-    "type": "object",
-    "properties": {
-    
-    "title": {
-        "type": "string",
-        "description": "creative recipe title"
-        },
-    "prompt": {
-        "type": "string",
-        "description": "a prompt for DALL-E to generate a high qualtiy picture of the recipe in the style of modern food photography, 15mm, warm light"
-    },
-    "ingredients": {
-        "type": "array",
-        "items": {
-        "type": "object",
-        "properties": {
-            "name": { "type": "string" },
-            "unit": { 
-            "type": "string",
-            "enum": ["grams", "ml","l","pinch","pieces", "teaspoons", "tablespoons"]
-            },
-            "amount": { "type": "number" }
-        },
-        "required": ["name", "unit", "amount"]
-        }
-    },
-    "instructions": {
-        "type": "array",
-        "description": "Steps to prepare the recipe (no numbering)",
-        "items": { "type": "string" }
-    },
-    "recipe_type": {
-        "type": "string",
-        "description": "wether the recipe is vegetarian, vegan, or with meat",
-        "enum": ["vegetarian", "vegan", "meat"]
-    }
-    },
-    "required": ["title","ingredients", "instructions", "recipe_type", "prompt"]
-    }
+#importing opencv
+import cv2
+
+def image_to_text(path):
+    img = cv2.imread(path)
+    #Resize the image
+    img = cv2.resize(img, None, fx=4, fy=4,  interpolation=cv2.INTER_CUBIC)
+    #Convert image to grayscale
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    text = pytesseract.image_to_string(gray, lang='deu',config="--psm 1")
+    return text
+
+def save_image(uploaded_file):
+    filename = secure_filename(uploaded_file.filename)
+    path = app.config["UPLOAD_FOLDER"]+filename
+    uploaded_file.save(path)
+    return path
 
 
 # define the function
 def get_recipe(dish_type,ingredients,recipe_type):
-    if recipe_type:
-        recipe_type = "vegetarian"
+    if recipe_type  == 'y':
+        recipe_type = "vegetarisches"
     else:
         recipe_type = ''
-    conversation=[{"role": "system", "content": "You are a helpful assistant."},
-                  {"role": "user", "content": f"""Provide a healthy {recipe_type} {dish_type} recipe containing {ingredients}. 
-                   Add other ingredients if you think this would make the dish better."""}
-                  ]
-    response = openai.ChatCompletion.create(model="gpt-4", 
-                                            messages=conversation, 
-                                            functions=[{"name": "set_recipe", "parameters": schema}],
-                                            function_call={"name": "set_recipe"},
-                                            temperature=0.5
-                                            )
-    answer = json.loads(response.choices[0].message.function_call.arguments)
+
+    query = f"Erstelle ein {recipe_type} {dish_type} Rezept mit folgenden Zutaten: {ingredients}"
+    response = retrieval_qa(query)
     
-    return answer
+    return response["result"].dict()
 
 
 #create an image using DALL-E
@@ -97,37 +70,40 @@ def get_image(title):
 
 
 #function that uses requets lib to extract html of a web page and prettyfies it with bs4
-def extract_html(url):
-    # Send a GET request to the URL
+def extract_from_website(url):
+    loader = WebBaseLoader(url)
+    body = loader.scrape().find('body').text
+    return re.sub(r'\s+', " ", body)
 
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
-    response = requests.get(url, headers=headers)
-    
-    # Check if the GET request is successful
-    if response.status_code == 200:
-        # Create a BeautifulSoup object and specify the parser
-        soup = BeautifulSoup(response.text, 'html.parser')
-        for data in soup(['style', 'script', 'a']):
-        # Remove tags
-            data.decompose()
-        soup = ' '.join(soup.stripped_strings)
-        body = soup.find('body')
-        # Return the pretty-printed HTML
-        return soup
-    else:
-        return "Failed to retrieve HTML."
-    
-# define the function
-def extract_recipe(html):
-    conversation=[{"role": "system", "content": "You are a helpful assistant."},
-                  {"role": "user", "content": f"extract the recipe form the follwoing html code:\n{html}"}
-                  ]
-    response = openai.ChatCompletion.create(model="gpt-4", 
-                                            messages=conversation, 
-                                            functions=[{"name": "set_recipe", "parameters": schema}],
-                                            function_call={"name": "set_recipe"},
-                                            temperature=0.5
-                                            )
-    answer = json.loads(response.choices[0].message.function_call.arguments)
-    
-    return answer
+def save_recipe(recipe_data, dish_type):
+    print("asking DALL_E for help ...")
+    print(recipe_data['beschreibung'])
+    image = get_image(recipe_data['prompt'])
+    print('storing info in database ...')
+
+    #create a new recipe
+    recipe = Recipe(title=recipe_data['title'],
+                    prompt = recipe_data['prompt'],
+                    beschreibung = recipe_data['beschreibung'],
+                    portionen = recipe_data['portionen'],
+                    recipe_type = recipe_data['recipe_type'], 
+                    tipp =  recipe_data['tipp'],
+                    image_id=image,
+                    dish_type = dish_type,
+                    ingredients = [Ingredients(
+                        name = ingredient['name'],
+                        unit=ingredient['unit'],
+                        amount=ingredient['amount']
+                        ) for ingredient in recipe_data['ingredients']],
+                    naehrwerte = [Naehrwerte(
+                        name = naehrwert['name'],
+                        unit=naehrwert['unit'],
+                        amount=naehrwert['amount']
+                        ) for naehrwert in recipe_data['naehrwerte']],
+                    instructions = [Instructions(
+                        instruction=instruction
+                        ) for instruction in recipe_data['instructions']]
+                    )
+    db.session.add(recipe)
+    db.session.commit()
+    return(recipe.id)

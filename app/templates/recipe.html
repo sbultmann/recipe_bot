@@ -1,45 +1,77 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-<div class="content rounded bg-light text-dark p-4 border border-3 border-secondary w-75 ">
-    <div class="row m-3">
-        <h1>{{ recipe.title }}</h1>
+<div class="content col-lg border bg-white border-light rounded p-3">
+    <div class="row">
+        <h1 class="display-6">{{ recipe.title }}</h1>
+        <hr>
     </div>
-    <div class="d-flex align-items-center justify-content-center m-4">
-        <div class="row rounded bg-white text-dark border border-3 border-secondary w-100">
-            <div class = "col ">
-                <img src="{{url_for('static',filename='img/' + image)}}" class="rounded mx-auto d-block p-4" alt="centered image"></img>
+    <div class="row">
+        <div class="col-3">
+            <img src="{{url_for('static',filename='img/' + image)}}" class="rounded" alt="centered image"></img>
+        </div>
+        <div class="col-3">
+            <div class="card" style="width: 12rem;">
+                <div class="card-header">
+                  Nährwerte
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for naehrwert in recipe.naehrwerte %}
+                        {% if naehrwert.name == 'Kalorien' %}
+                            <li class="list-group-item">Energie: {{ naehrwert.amount }} {{ naehrwert.unit }}</li>
+                        {% elif naehrwert.name == 'Kohlenhydrate' %}
+                            <li class="list-group-item">Kohlehydrate: {{ naehrwert.amount }} {{ naehrwert.unit }}</li>
+                        {% elif naehrwert.name == 'Eiweiß' %}
+                            <li class="list-group-item">Eiweiß: {{ naehrwert.amount }} {{ naehrwert.unit }}</li>
+                        {% elif naehrwert.name == 'Fett' %}
+                            <li class="list-group-item">Fett: {{ naehrwert.amount }} {{ naehrwert.unit }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
             </div>
+            
+        </div>
+        <div class="col">
+            <p class="text-start">{{ recipe.beschreibung }}</p>
         </div>
     </div>
-    <div class="m-4">
+    <div class="row pt-3">
+        <hr>
+    </div>
+    <div class="row pt-3">
+        <div class="col-5">
+            <h5>Zutaten</h5>
+        </div>
+        <div class="col-7">
+            <h5>Zubereitung</h5>
+        </div>
+    </div>
     <div class="row">
         <div class="col-5">
-            <h3>Ingredients</h3>
             <table class="table">
                 <tbody>
                     {% for ingredient in recipe.ingredients %}
-                    <tr class="table-light">
+                    <tr class="">
                       <td>{{ ingredient.amount }} {{ ingredient.unit }}</td>
                       <td>{{ ingredient.name }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
-                
             </table>
-                
-            
         </div>
-        
         <div class="col-7">
-            <h3>Instructions</h3>
             <ul>
                 {% for instruction in recipe.instructions %}
-                <li>{{ instruction }}</li>
+                <li>{{ instruction.instruction }}</li>
                 {% endfor %}
             </ul>
         </div>
     </div>
-    </div> 
+    <div class="row">
+        <div class="col">
+            <p class="fst-italic">Tipp: {{ recipe.tipp }}</p>
+        </div>
+    </div>
 </div>
+
 {% endblock %}
