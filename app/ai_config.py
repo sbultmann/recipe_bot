@@ -16,10 +16,6 @@ from langchain.prompts import PromptTemplate
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains import RetrievalQA
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 
 import chromadb
 import openai
