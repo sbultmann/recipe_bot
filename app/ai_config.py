@@ -9,21 +9,15 @@ from pydantic import BaseModel, Field
 from langchain.chains.openai_functions import create_qa_with_structure_chain
 from langchain.chains.openai_functions import create_structured_output_chain
 
-
 from langchain.prompts.chat import ChatPromptTemplate, HumanMessagePromptTemplate
 from langchain.schema import SystemMessage, HumanMessage
 from langchain.prompts import PromptTemplate
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains import RetrievalQA
 
-
 import chromadb
 import openai
 from app import app
-
-
-#openai.api_key = app.config["OPENAI_API"]
-
 
 model_name = "intfloat/multilingual-e5-large"
 model_kwargs = {'device': 'cpu'}
