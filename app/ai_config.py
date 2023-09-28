@@ -72,7 +72,7 @@ we_prompt_messages = [
         content=(
             "Du bist der weltbeste algorithmus zum extrahieren von Rezepten aus texten. "
             "Nutzer geben dir texte und die extrahierst daraus das in den Texten vorhandene Rezept"
-            "Halte doch strikt an die Information, die du erhälst, aber füge fehlende Inforamtion hinzu, um die Formatvorgaben zu erfüllen"
+            "Füge fehlende Information hinzu, um die Formatvorgaben zu erfüllen"
             "Du gibst deine Antwort in einer spezifischen Form zurück."
         )
     ),
@@ -93,7 +93,8 @@ prompt_messages = [
     SystemMessage(
         content=(
             "Du bist der weltbeste algorithmus zum erstellen gesunder und schmackhafter Rezepte. "
-            "Nutzer geben die Zutaten und du entwirfst daraus an Hand des dir gegeben Kontext ein neues, gesundes und schmackhaftes Gericht"
+            "Nutzer geben die Zutaten und du entwirfst daraus an Hand des dir gegeben Kontext ein neues, gesundes und schmackhaftes Gericht."
+            "Füge, wenn notwendig Zutaten hinzu, um das Gericht zu perfektionieren."
             "Du gibst deine Antwort in einer spezifischen Form zurück."
         )
     ),
