@@ -28,10 +28,11 @@ llm = HuggingFaceBgeEmbeddings(
     encode_kwargs=encode_kwargs
 )
 
-gpt4 = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k", max_tokens=1000)#, openai_api_key=openai.api_key)
+gpt4 = ChatOpenAI(temperature=0, model="gpt-4", max_tokens=1000)#, openai_api_key=openai.api_key)
 
 
-client = chromadb.HttpClient(host="192.168.178.20", port=8000)
+
+client = chromadb.HttpClient(host=app.config['CHROMA_HOST_NAME'], port=8000)
 collection_name = "GuteKuecheAT"
 index = Chroma(
     client=client,
@@ -120,7 +121,7 @@ final_qa_chain_pydantic = StuffDocumentsChain(
 )
 
 retrieval_qa = RetrievalQA(
-    retriever=index.as_retriever(search_kwargs={'k': 30, 
+    retriever=index.as_retriever(search_kwargs={'k': 10, 
                                                 "filter":{'$and': [{'Bewertung':{'$gte':4.5}}, {'Stimmen':{'$gte':200}}]}}), 
                                  combine_documents_chain=final_qa_chain_pydantic,
                                  return_source_documents=True,
