@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+<div class="row">
+   
+        {% for recipe_batch in recipes|sort(attribute='title')|batch(15) %}
+        <div class="col">
+            <div class="accordion" id="accordionExample">
+                {% for recipe in  recipe_batch %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{recipe.id}}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{recipe.id}}" aria-expanded="false" aria-controls="collapse{{recipe.id}}">
+                        {{recipe.title}}
+                    </button>
+                    </h2>
+                    <div id="collapse{{recipe.id}}" class="accordion-collapse collapse" aria-labelledby="heading{{recipe.id}}" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <a href="{{ url_for('recipe', id=recipe.id) }}" class="link-body-emphasis link-offset-2 link-underline-opacity-0 link-underline-opacity-75-hover">
+                        <div class="row">
+                            <div class="col-3">
+                                <img src="{{url_for('static',filename='img/' + recipe.image_id)}}" class="img-thumbnail" alt="..." width="128">
+                            </div>
+                            <div class="col">
+                                <span>{{recipe.beschreibung}}</span>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+</div>
+
+{% endblock %}

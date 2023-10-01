@@ -72,6 +72,26 @@
             <p class="fst-italic">Tipp: {{ recipe.tipp }}</p>
         </div>
     </div>
+    <div class="row">
+        <div class="col-2">
+            <div class="accordion" id="accordionExample">
+                
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                      Eintrag Löschen
+                    </button>
+                  </h2>
+                  <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <a href="{{ url_for('delete', id=recipe.id) }}" class="btn btn-danger" role="button">Löschen</a>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

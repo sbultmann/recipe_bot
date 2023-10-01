@@ -9,7 +9,9 @@ from app.ai_config import we_chain
 @app.route('/',methods=['GET', 'POST'])
 def index():
     recipes = Recipe.query.all()
-    return render_template('collection.html', title='Recipe Bot', recipes = recipes)
+    for recipe in recipes:
+        print(recipe.title)
+    return render_template('index.html', title='Recipe Bot', recipes = recipes)
 
 
 @app.route('/generate',methods=['GET', 'POST'])
@@ -37,6 +39,16 @@ def recipe(id):
                              else {'amount':ingredient['amount'], 'unit':ingredient['unit'], 'name': ingredient['name']}
                              for ingredient in recipe['ingredients'] ]
     return render_template('recipe.html', title='Recipe Bot', recipe=recipe, image = recipe['image_id'])
+
+@app.route('/delete/<id>')
+def delete(id):
+    #Recipe.query.filter_by(id=id).delete()
+    recipe = db.session.query(Recipe).filter(Recipe.id==id).first()
+    db.session.delete(recipe)
+    db.session.commit()
+    recipes = Recipe.query.all()
+    return render_template('index.html', title='Recipe Bot', recipes = recipes)
+
 
 @app.route('/import_recipe',methods=['GET', 'POST'])
 def import_recipe():
