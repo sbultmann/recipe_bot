@@ -9,9 +9,22 @@ from app.ai_config import we_chain
 @app.route('/',methods=['GET', 'POST'])
 def index():
     recipes = Recipe.query.all()
+    imported = []
+    main = []
+    side = []
+    desert = []
     for recipe in recipes:
-        print(recipe.title)
-    return render_template('index.html', title='Recipe Bot', recipes = recipes)
+        #print(recipe.dish_type)
+        if recipe.dish_type == 'Hauptgericht':
+            main.append(recipe)
+        elif recipe.dish_type == 'Beilage':
+            side.append(recipe)
+        elif recipe.dish_type == 'Nachtisch':
+            desert.append(recipe)
+        elif recipe.dish_type == 'imported':
+            imported.append(recipe)
+
+    return render_template('index.html', title='Recipe Bot', imported = imported, main = main, side = side, desert = desert)
 
 
 @app.route('/generate',methods=['GET', 'POST'])
@@ -47,8 +60,21 @@ def delete(id):
     db.session.delete(recipe)
     db.session.commit()
     recipes = Recipe.query.all()
-    return render_template('index.html', title='Recipe Bot', recipes = recipes)
-
+    imported = []
+    main = []
+    side = []
+    desert = []
+    for recipe in recipes:
+        #print(recipe.dish_type)
+        if recipe.dish_type == 'Hauptgericht':
+            main.append(recipe)
+        elif recipe.dish_type == 'Beilage':
+            side.append(recipe)
+        elif recipe.dish_type == 'Nachtisch':
+            desert.append(recipe)
+        elif recipe.dish_type == 'imported':
+            imported.append(recipe)
+    return render_template('index.html', title='Recipe Bot', imported = imported, main = main, side = side, desert = desert)
 
 @app.route('/import_recipe',methods=['GET', 'POST'])
 def import_recipe():
