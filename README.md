@@ -13,6 +13,10 @@ FLASK_APP=recipe_bot.py
 FLASK_DEBUG=1
 OPENAI_API="your Open.ai API key" #required for gpt-4 and DALL-E
 SECRET_KEY="your secret key here" #required for cross site attack protection
+TOKENIZERS_PARALLELISM="false"
+DATABASE_URL="URL to sql database"
+UPLOAD_FOLDER="app/static/tmp/"
+CHROMA_HOST_NAME="IP adress of chroma db"
 ```
 Finally, run the app with:
 ```Bash

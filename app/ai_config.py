@@ -57,7 +57,7 @@ class Rezept(BaseModel):
     beschreibung: str = Field(..., description="Answer to the question that was asked")
     portionen: int = Field(..., description="Anzahl der Portionen des Rezepts")
     recipe_type: str = Field(..., description="Angabe ob das Rezept vegan, vegetarisch oder fleisch ist")
-    tipp: str = Field(..., description="EIn Tipp zur hilfreich zu Zubereitung oder möglichen Verfeinerung des Rezepts")
+    tipp: str = Field(..., description="Ein Tipp zur hilfreich zu Zubereitung oder möglichen Verfeinerung des Rezepts")
     ingredients: List[Zutat] = Field(..., description="Alle Zutaten nötig für die Herstellung des Rezepts")
     instructions: List[str] = Field(..., description="Arbeitsschritte notwendig zu Herstellung des Rezepts. Nicht nummeriert!")
     naehrwerte: List[Nutrition] = Field(..., description="Alle Nähwerte des Rezepts: Kalorien, Eiweiß, Fett und Kohlehydrate")
