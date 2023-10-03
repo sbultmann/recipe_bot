@@ -23,9 +23,7 @@ def index():
             desert.append(recipe)
         elif recipe.dish_type == 'imported':
             imported.append(recipe)
-
     return render_template('index.html', title='Recipe Bot', imported = imported, main = main, side = side, desert = desert)
-
 
 @app.route('/generate',methods=['GET', 'POST'])
 def generate():
@@ -42,7 +40,6 @@ def generate_recipe():
     recipe_data = get_recipe(request.form['dish_type'], request.form['ingredients'],recipe_type)
     recipe_id = save_recipe(recipe_data, request.form['dish_type'])
     return url_for('recipe', id = recipe_id)
-
 
 @app.route('/recipe/<id>')
 def recipe(id):
@@ -111,4 +108,7 @@ def generate_from_text():
 def recipe_kindle(id):
     recipe = Recipe.query.filter_by(id=id).first_or_404()
     recipe = recipe.to_dict()
+    recipe['ingredients'] = [{'amount':int(ingredient['amount']), 'unit':ingredient['unit'], 'name': ingredient['name']} if ingredient['amount'].is_integer()
+                             else {'amount':ingredient['amount'], 'unit':ingredient['unit'], 'name': ingredient['name']}
+                             for ingredient in recipe['ingredients'] ]
     return render_template('kindle_recipe.html', title='Recipe Bot', recipe=recipe)
