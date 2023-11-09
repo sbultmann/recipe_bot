@@ -49,12 +49,14 @@ def get_recipe(dish_type,ingredients,recipe_type):
 
 #create an image using DALL-E
 def get_image(title):
-    PROMPT = f"{title} food photography, 15mm, warm light"
-
+    PROMPT = f"{title}"
+    print(PROMPT)
     response = openai.Image.create(
+        model="dall-e-3",
         prompt=PROMPT,
         n=1,
-        size="256x256",
+        size="1024x1024",
+        quality="standard"
     )   
     
     if "data" in response:

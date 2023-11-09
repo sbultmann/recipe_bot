@@ -28,7 +28,7 @@ llm = HuggingFaceBgeEmbeddings(
     encode_kwargs=encode_kwargs
 )
 
-gpt4 = ChatOpenAI(temperature=0, model="gpt-4", max_tokens=1000)#, openai_api_key=openai.api_key)
+gpt4 = ChatOpenAI(temperature=1, model="gpt-4-1106-preview")#, openai_api_key=openai.api_key)
 
 
 
@@ -53,7 +53,7 @@ class Nutrition(BaseModel):
 class Rezept(BaseModel):
     """Ein leckeres und gesundes Rezept"""
     title: str = Field(..., description="Kreativer Titel für das Rezept")
-    prompt: str = Field(..., description="Eine prompt für die bildgenerierende AI DALL-E ein qualitativ hochwertiges Bild des Rezepts im Stil der modernen Food-Fotografie zu erstellen, 15mm, warmes Licht")
+    prompt: str = Field(..., description="Eine prompt für bildgenerierende AI DALL-E3 ein qualitativ hochwertiges Bild des Rezepts im Stil der modernen Food-Fotografie zu erstellen, 15mm, warmes Licht")
     beschreibung: str = Field(..., description="Answer to the question that was asked")
     portionen: int = Field(..., description="Anzahl der Portionen des Rezepts")
     recipe_type: str = Field(..., description="Angabe ob das Rezept vegan, vegetarisch oder fleisch ist")
